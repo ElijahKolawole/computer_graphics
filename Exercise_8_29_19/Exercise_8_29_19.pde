@@ -1,7 +1,7 @@
 
 Walker walker;
 void setup(){
-  frameRate(5);
+  frameRate(50);
 size(600, 400);
 walker = new Walker();
 background(255);
