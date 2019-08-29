@@ -4,15 +4,15 @@ float b = 0;
 
 void setup(){
   
-  size(200,200);
+  size(400,400);
 }
 
 void draw(){
   background(r, g, b);
   
   stroke(255);
-  line(0, 100, 200, 100);
-    if(mouseY < 100)
+  line(0, height/2, width, height/2);
+    if(mouseY < height/2)
   r++;
   else
   r--;
