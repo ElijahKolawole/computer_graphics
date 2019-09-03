@@ -6,7 +6,7 @@ void setup() {
   surface.setResizable(true);
   space = 50;
   col = color(255);
-  size(600, 600);
+ size(600, 600);
   circle = new Circle();
   mouseX = width/6;
   mouseY = height/2;
@@ -14,10 +14,11 @@ void setup() {
   circleDiameter = 20;
   circle_count = 5;
   frameRate(5);
-  x = mouseX;
-  y =mouseY;
+ 
 }
 void draw() { 
+   x = mouseX;
+  y =mouseY;
   for (int i= 1; i <= circle_count; i++) {
     
     circle.drawCircle(x, y, circleDiameter * i, circleDiameter * i, col);
@@ -26,7 +27,7 @@ void draw() {
     
    
 
-    if (i == 5) {
+    if (i == circle_count) {
       circleDiameter =0;
     }
     print("mouseX="+mouseX+", mouseY="+mouseY + ", circleDiamter= "+ circleDiameter + ", i= "+ i +":E");
