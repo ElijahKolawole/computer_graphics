@@ -1,52 +1,42 @@
-int r, g, b, x, y, circleDiameter;
+int r, g, b, x, y, circleDiameter, circle_count, space;
+Circle  circle;
+color col;
 void setup() {
- 
-  surface.setResizable(true);
-  size(600, 600);
-  //circleDiameter = constrain(circleDiameter, 0, 100);
-  circleDiameter = 20;
-  frameRate(5);
- // x =width/5;
 
-  y=height/2;
+  surface.setResizable(true);
+  space = 50;
+  col = color(255);
+  size(600, 600);
+  circle = new Circle();
+  mouseX = width/6;
+  mouseY = height/2;
+
+  circleDiameter = 20;
+  circle_count = 5;
+  frameRate(5);
+  x = mouseX;
+  y =mouseY;
 }
 void draw() { 
-ellipseMode(CENTER);
-stroke(1);
-  x =(width -200)/5;
+  for (int i= 1; i <= circle_count; i++) {
+    
+    circle.drawCircle(x, y, circleDiameter * i, circleDiameter * i, col);
+    x += space+(circleDiameter/2);
+    space += 20;
+    
+   
 
-ellipse(x,y, circleDiameter, circleDiameter);
-print("x="+x);
+    if (i == 5) {
+      circleDiameter =0;
+    }
+    print("mouseX="+mouseX+", mouseY="+mouseY + ", circleDiamter= "+ circleDiameter + ", i= "+ i +":E");
+  }  
 
-
-ellipse(x*2,y, circleDiameter*2, circleDiameter*2);
-print("x="+x);
-
-
-ellipse(x*3,y, circleDiameter*3, circleDiameter*3);
-print("x="+x);
-
-
-ellipse(x*4,y, circleDiameter*4, circleDiameter*4);
-print("x="+x);
-
-ellipse(x*5,y, circleDiameter*5, circleDiameter*5);
-print("x="+x);
-
-
-
-//for (int i =0; i < 5; i++){
-//  ellipse(x,y, circleDiameter, circleDiameter);
-//  x += circleDiameter*2;
-
-//  circleDiameter += 20;
-//  constrain(circleDiameter, 0, 100);
-//}
-
-  //println("r=" + r + ", g=" +g + ", x=" + x +", y="+ y + ", circleDiameter" + circleDiameter);
+  //println("mouseX="+mouseX+", mouseY="+mouseY + ", circleDiamter= "+ circleDiameter + ", i= "+ i);
 }
 
 
-void mouseMoved(){
- 
+void mouseMoved() {
+  circle.moveCircle();
+  circle.drawCircle(x, y, circleDiameter, circleDiameter, col);
 }

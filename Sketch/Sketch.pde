@@ -24,8 +24,8 @@ void draw(){
   //drawFourSquare();
  //drawTailingLine();
  //drawRectangleWithMouse();
- doExOne();
- //drawColoredREctangles();
+// doExOne();
+ drawColoredREctangles();
  //drawBouncingBall();
 
 
