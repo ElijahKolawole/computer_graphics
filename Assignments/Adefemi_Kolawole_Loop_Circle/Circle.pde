@@ -17,12 +17,12 @@ class Circle{
  }
  void drawCircle(int x, int y, int circleW, int circleH, color col){
    ellipseMode(CENTER);
-   stroke(1);
+   //stroke(1);
    fill(col);
   ellipse(x, y, circleW, circleH);
  }
  void moveCircle(){
-   x +=mouseX;
-   y += mouseY;
+   this.x +=mouseX;
+   this.y += mouseY;
  }
 }
