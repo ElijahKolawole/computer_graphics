@@ -1,19 +1,20 @@
-int r, g, b, x, y, circleDiameter, circle_count, circle_space, bg_color;
+int r, g, b, x, y, circleDiameter, circle_count, space, bg_color;
 Circle  circle;
 color black, white, bg_col, cir_col;
+boolean mMoved;
 
 void setup() {
   
   //surface.setResizable(true);
   size(600, 600);
-  circle_space = 100;
+  space = 50;
   white = color(255, 255, 255);
   black = color(0, 0, 0);
   mouseX = width/6;
   mouseY = height/2;
+  mMoved = false;
   bg_color = 0;
    bg_col = white;
-   
   
   circle = new Circle();
   
@@ -23,44 +24,44 @@ void setup() {
   //frameRate(5);
 }
 void draw() {
-    
-constrain(circle_space, 40, 50);
    x = mouseX;
   y =mouseY;
-  cir_col = color(x/3,y/2,x/1.5);
+  cir_col = color(x,y,x);
   background(bg_col);
   for (int i= 1; i <= circle_count; i++) {
    
       circle.drawCircle(x, y, circleDiameter * i, circleDiameter * i, cir_col);
     
-    x += circle_space+(circleDiameter/2);
-   
+    x += space+(circleDiameter/2)+space;
+  
     //print("mouseX="+mouseX+", mouseY="+mouseY + ", circleDiamter= "+ circleDiameter + ", i= "+ i +":E");
+  }  
 
-
-  }
 }
+
+
 void keyPressed(){
 
-println("Name: Adefemi Kolawole, Date: 09/03/2019");
+println("Name: Adefemi Kolawole, Date: 09/03/2019" + "bg_color = "  + bg_color);
 
 }
 
-void mousePressed(){
-  //println("Name: Adefemi Kolawole, Date: 09/03/2019");
+void mouseClicked(){
 switch(bg_color){
 case 0 :
- bg_col = black;
+ bg_col = white;
   
  bg_color = 1;
  
  break;
  
  case 1 :
- bg_col = white;
+ bg_col = black;
  bg_color =0;
-
-
+ 
+ break;
+ default:
+ bg_col = white;
 //}
 }
 }
