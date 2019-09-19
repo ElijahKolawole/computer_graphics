@@ -12,7 +12,7 @@ void setup() {
   }
 }
 void draw() {
-
+  
   background(255);  
   b.move();
   b.display();
