@@ -1,0 +1,3 @@
+class EVector3D{
+
+}
