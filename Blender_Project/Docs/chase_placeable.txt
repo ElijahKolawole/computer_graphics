@@ -1,0 +1,104 @@
+// This script makes a placeable chase nearby players.
+// GROOOARRRRR!!
+#include "x0_i0_position"
+#include "x3_inc_string"
+
+void ChasePlaceableTick(location lCurrent, float fStepDistance=1.0, float fDelayUntilNext=2.0, object oLastPlaceable=OBJECT_INVALID);
+
+void main()
+{
+    if (GetTag(OBJECT_SELF) != "TEMP" && !GetLocalInt(OBJECT_SELF, "CHASE_PLACEABLE_ACTIVATED"))
+        {
+        SetLocalInt(OBJECT_SELF, "CHASE_PLACEABLE_ACTIVATED", TRUE);
+
+        ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY), OBJECT_SELF);
+        ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectCutsceneGhost(), OBJECT_SELF);
+        SetPlotFlag(OBJECT_SELF, TRUE);
+
+        ChasePlaceableTick(GetLocation(OBJECT_SELF));
+        }
+}
+
+void ChasePlaceableTick(location lCurrent, float fStepDistance=1.0, float fDelayUntilNext=2.0, object oLastPlaceable=OBJECT_INVALID)
+{
+    object   oNearestPlayer = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, OBJECT_SELF, 1, CREATURE_TYPE_IS_ALIVE, TRUE);
+    location lPlayer        = GetLocation(oNearestPlayer);
+    float    fDistance      = GetDistanceBetweenLocations(lCurrent, lPlayer);
+    vector   vPos           = GetPositionFromLocation(lCurrent);
+    float    fDir           = GetOppositeDirection(VectorToAngle(vPos-GetPosition(oNearestPlayer)));
+    location lPlaceableNew  = GenerateNewLocationFromLocation(lCurrent, fStepDistance, fDir, fDir);
+    object   oPlaceableNew  = oLastPlaceable;
+    string   sMsg;
+
+    // If there is a living player within 25m range to the current location:
+    if (GetIsObjectValid(oNearestPlayer) && fDistance < 25.0)
+        {
+        // Determine the speed and step distance depending on how far the player is away:
+        if (fDistance < 2.5)
+            {
+            fDelayUntilNext = 1.0;
+            fStepDistance   = 1.0;
+            }
+        else
+            {
+            fDelayUntilNext -= 0.1;
+            fStepDistance   += 0.1;
+            if (fDelayUntilNext < 1.0)
+                fDelayUntilNext = 1.0;
+            if (fStepDistance > 2.4)
+                fStepDistance = 2.4;
+            }
+
+        // Destroy the previous placeable.
+        DestroyObject(oLastPlaceable);
+
+        // Create the next placeable.
+        oPlaceableNew = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(OBJECT_SELF), lPlaceableNew, FALSE, "TEMP");
+        SetEventScript(oPlaceableNew, EVENT_SCRIPT_PLACEABLE_ON_HEARTBEAT, "");
+        DelayCommand(0.3, ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectCutsceneGhost(), oPlaceableNew));
+
+        // If oNearestPlayer is within our catch radius...
+        if (fDistance < 2.5)
+            {
+            // ... we are going to MURDER THEM! Because we are EVIL!
+            ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_COM_BLOOD_LRG_RED), lPlayer);
+            ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(1)), oNearestPlayer);
+
+            // Output a message:
+            switch (Random(8))
+                {
+                case 0: sMsg = "*slashes!*"; break;
+                case 1: sMsg = "*bites!"; break;
+                case 2: sMsg = "SNARRRRLLL"; break;
+                case 3: sMsg = "MWEHEHEHE"; break;
+                case 4: sMsg = "MEAT!"; break;
+                case 5: sMsg = "*rips!*"; break;
+                case 6: sMsg = "YESSSS!!"; break;
+                case 7: sMsg = "YES!!!"; break;
+                }
+            if (sMsg != "")
+                DelayCommand(0.5, AssignCommand(oPlaceableNew, SpeakString(StringToRGBString(sMsg, "600"))));
+            }
+        else
+            {
+            // ... and if they aren't in range, we might say threatening things!
+            switch (Random(30))
+                {
+                case 0: sMsg = "I'm going to catch you..."; break;
+                case 1: sMsg = "You don't have to run from me..."; break;
+                case 2: sMsg = "Come to me..."; break;
+                case 3: sMsg = "Hello..."; break;
+                case 4: sMsg = "You're made of meat..."; break;
+                case 5: sMsg = "We could be friends..."; break;
+                case 6: sMsg = "We could be such good friends..."; break;
+                case 7: sMsg = "Give me a hug..."; break;
+                case 8: sMsg = "Come closer..."; break;
+                }
+            if (sMsg != "")
+                DelayCommand(0.5, AssignCommand(oPlaceableNew, SpeakString(StringToRGBString(sMsg, "666"))));
+            }
+        }
+
+    // Repeat after a delay.
+    DelayCommand(fDelayUntilNext, ChasePlaceableTick(lPlaceableNew, fStepDistance, fDelayUntilNext, oPlaceableNew));
+}
